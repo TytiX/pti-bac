@@ -5,11 +5,8 @@ RUN apk add g++ make python
 
 WORKDIR /app/
 COPY . .
-RUN cd app
 RUN yarn install
 RUN yarn build
-RUN cd ..
-RUN yarn install
 
 # Run image
 FROM node:13-alpine
