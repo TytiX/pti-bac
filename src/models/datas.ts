@@ -1,4 +1,4 @@
-import { Categorie } from './categorie';
+import { Category } from './category';
 import { Lobby } from './lobby';
 import { Game } from './game';
 
@@ -15,7 +15,7 @@ export class Datas {
     });
     return lobby ? lobby.categories : [];
   }
-  addCategorieToLobby(lobbyId: string, data: Pick<Categorie, 'name'>) {
+  addCategorieToLobby(lobbyId: string, data: Pick<Category, 'name'>) {
     const lobby = this.lobbies.find(l => {
       return l.id === lobbyId;
     });

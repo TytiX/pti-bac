@@ -1,6 +1,7 @@
 import feathers from '@feathersjs/feathers';
 import '@feathersjs/transport-commons';
 import express from '@feathersjs/express';
+import * as expressjs from 'express';
 import socketio from '@feathersjs/socketio';
 
 import { MessageService } from './services/message-service';
@@ -14,11 +15,11 @@ import { GameService } from './services/game-service';
 const app = express(feathers());
 
 // Express middleware to parse HTTP JSON bodies
-app.use(express.json());
+app.use(expressjs.json());
 // Express middleware to parse URL-encoded params
-app.use(express.urlencoded({ extended: true }));
+app.use(expressjs.urlencoded({ extended: true }));
 // Express middleware to to host static files from the current folder
-app.use(express.static('public'));
+app.use(expressjs.static('public'));
 // Add REST API support
 app.configure(express.rest());
 // Configure Socket.io real-time APIs
@@ -43,7 +44,7 @@ app.publish(data => app.channel('everybody'));
 const port = process.env.PORT || 3030;
 // Start the server
 app.listen(port).on('listening', () =>
-  console.log('Feathers server listening on localhost:3030')
+  console.log(`Feathers server listening on localhost:${port}`)
 );
 
 // create lobby "default"

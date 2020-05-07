@@ -29,7 +29,7 @@ export class LobbyService {
   }
 
   bindLobbySocket(lobby: Lobby) {
-    const io = this.app.io.of(`/lobby-${lobby.name}-${lobby.id}`);
+    const io = (this.app as unknown as any).io.of(`/lobby-${lobby.name}-${lobby.id}`);
     io.on('connection', (socket: LocalSocket) => {
       // console.log('--- user connected');
       socket.on('user-connected', (user: User) => {
@@ -58,7 +58,7 @@ export class LobbyService {
 
   async delete(id: Id) {
     const lobby = this.db.getLobby(id as string);
-    delete this.app.io.nsps[`/lobby-${lobby.name}-${lobby.id}`];
+    delete (this.app as unknown as any).io.nsps[`/lobby-${lobby.name}-${lobby.id}`];
     this.db.deleteLobby(id as string);
   }
 }
