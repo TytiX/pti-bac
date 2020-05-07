@@ -26,7 +26,7 @@ export interface GameState {
   users: User[];
   categories: Category[];
 
-  finishedFirst: User;
+  finishedFirst?: User;
 
   gameState?: GameWordState;
   correction?: Correction;
