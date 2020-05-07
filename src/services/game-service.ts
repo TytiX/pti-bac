@@ -33,7 +33,7 @@ export class GameService {
   }
 
   bindGameSocket(game: Game) {
-    const io = (this.app as unknown as any).io.of(`/game-${game.name}-${game.id}`);
+    const io = (this.app as unknown as any).io.of(`/game-${game.id}`);
     io.on('connection', (socket: LocalSocket) => {
       console.log('--- user connected');
       socket.on('user-connected', (user: User) => {
@@ -105,7 +105,7 @@ export class GameService {
 
   async delete(id: Id) {
     const game = this.db.getGame(id as string);
-    delete (this.app as unknown as any).io.nsps[`/game-${game.name}-${game.id}`];
+    delete (this.app as unknown as any).io.nsps[`/game-${game.id}`];
     this.tickers[game.id].unsubscribe();
     this.db.deleteGame(id as string);
   }

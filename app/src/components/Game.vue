@@ -83,7 +83,7 @@ export default class Game extends Vue {
   mounted() {
     this.$feather.service('games').get(this.$route.params.gameId).then( (game: GameState) => {
       this.gameStateUpdate(game);
-      this.client = io(`/game-${game.name}-${game.id}`);
+      this.client = io(`/game-${game.id}`);
       this.bindEvent();
     });
     this.$feather.service('games').on('updated', this.gameStateUpdate.bind(this));

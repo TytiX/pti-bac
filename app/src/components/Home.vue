@@ -11,6 +11,10 @@
       </b-input-group>
 
       <b-list-group>
+        <b-list-group-item
+          variant="success"
+          to="#"
+          @click="createDefaultLobby">Default game</b-list-group-item>
         <b-list-group-item v-for="lobby of lobbies"
           :key="lobby.id"
           :to="`/lobby/${lobby.id}`">
@@ -61,6 +65,26 @@ export default class Home extends Vue {
       });
       this.newGameName = '';
     }
+  }
+
+  createDefaultLobby() {
+    this.$feather.service('lobbies').create({
+      name: 'may the force be with you',
+      categories: [
+        { id: 0, name: 'Prénom'},
+        { id: 1, name: 'Métier'},
+        { id: 2, name: 'Personnage DISNEY'},
+        { id: 3, name: 'Groupe de musique'},
+        { id: 4, name: 'Sport'},
+        { id: 5, name: 'Pays'},
+        { id: 6, name: 'Ville'},
+        { id: 7, name: 'Fleur ou plante'},
+        { id: 8, name: 'Marque'}
+      ]
+    }).then( (lobby: Lobby) => {
+      this.$router.push(`/lobby/${lobby.id}`);
+    });
+    this.newGameName = '';
   }
 
 }

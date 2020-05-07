@@ -1,43 +1,53 @@
 <template>
   <div>
     <AppNavBar :title="lobby.name | capitalize"></AppNavBar>
-    <div class="container mt-3">
+    <b-container fluid="md" class="mt-3">
+      <b-row>
+        <h4 class="mt-3">Game time</h4>
+        <b-input-group class="mt-3">
+          <b-form-timepicker
+            v-model="timer2time"
+            size="sm"
+            show-seconds>
+          </b-form-timepicker>
+        </b-input-group>
+      </b-row>
 
-      <h4 class="mt-3">Game time</h4>
-      <b-input-group class="mt-3">
-        <b-form-timepicker
-          v-model="timer2time"
-          size="sm"
-          show-seconds>
-        </b-form-timepicker>
-      </b-input-group>
+      <b-row>
+        <b-col md="6">
+          <h4 class="mt-3">Categories</h4>
+          <b-input-group size="sm" class="mt-3 mb-3" prepend="Nouvelle Categorie">
+            <b-form-input @keyup.enter="updateCategories('add')" v-model="newCategorie"></b-form-input>
+            <b-input-group-append>
+              <b-button @click="updateCategories('add')" size="sm" variant="success"><b-icon icon="plus"></b-icon></b-button>
+            </b-input-group-append>
+          </b-input-group>
 
-      <h4 class="mt-3">Categories</h4>
-      <b-input-group size="sm" class="mt-3 mb-3" prepend="Nouvelle Categorie">
-        <b-form-input @keyup.enter="updateCategories('add')" v-model="newCategorie"></b-form-input>
-        <b-input-group-append>
-          <b-button @click="updateCategories('add')" size="sm" variant="success"><b-icon icon="plus"></b-icon></b-button>
-        </b-input-group-append>
-      </b-input-group>
+          <b-list-group class="text-left">
+            <b-list-group-item v-for="category of lobby.categories" :key="category.id"
+              class="d-flex justify-content-between align-items-center">
+              {{category.name}}
+              <b-button @click="updateCategories('remove', category)" variant="danger"><b-icon icon="trash"></b-icon></b-button>
+            </b-list-group-item>
+          </b-list-group>
+        </b-col>
+        <b-col md="6">
+          <h4 class="mt-3">Users</h4>
+          <b-list-group>
+            <b-list-group-item v-for="user of lobby.users" :key="user.id">
+              {{ user.name }}
+            </b-list-group-item>
+          </b-list-group>
+        </b-col>
+      </b-row>
 
-      <b-list-group class="text-left">
-        <b-list-group-item v-for="category of lobby.categories" :key="category.id"
-          class="d-flex justify-content-between align-items-center">
-          {{category.name}}
-          <b-button @click="updateCategories('remove', category)" variant="danger"><b-icon icon="trash"></b-icon></b-button>
-        </b-list-group-item>
-      </b-list-group>
+      <b-row>
+        <b-col>
+          <b-button class="mt-3" @click="startGame">Start game</b-button>
+        </b-col>
+      </b-row>
 
-      <b-button class="mt-3" @click="startGame">Start game</b-button>
-
-      <h4 class="mt-5">Users</h4>
-      <b-list-group>
-        <b-list-group-item v-for="user of lobby.users" :key="user.id">
-          {{ user.name }}
-        </b-list-group-item>
-      </b-list-group>
-
-    </div>
+    </b-container>
   </div>
 </template>
 
@@ -72,7 +82,7 @@ export default class LobbyComp extends Vue{
   mounted() {
     this.$feather.service('lobbies').get(this.$route.params.lobbyId).then( (lobby: Lobby) => {
       this.updateLobby(lobby);
-      this.client = io(`/lobby-${lobby.name}-${lobby.id}`);
+      this.client = io(`/lobby-${lobby.id}`);
       this.bindEvent();
     });
     this.$feather.service('lobbies').on('updated', this.updateLobby.bind(this));
