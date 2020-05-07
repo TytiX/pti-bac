@@ -4,10 +4,13 @@
       v-for="category of categories"
       :key="category.id"
       :label="category.name">
-      <b-form-input v-model="currentWordState[category.id]" trim></b-form-input>
+      <b-form-input
+        v-model="currentWordState[category.id]"
+        v-on:keyup.enter="$event.target.nextElementSibling.focus()"
+        trim></b-form-input>
     </b-form-group>
     <div class="button-container">
-      <b-button @click="finish">Finish</b-button>
+      <b-button @click="finish" variant="danger">Finish</b-button>
     </div>
   </div>
 </template>

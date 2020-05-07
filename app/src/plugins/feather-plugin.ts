@@ -13,7 +13,7 @@ declare module 'vue/types/vue' {
   }
 }
 
-export default function VueFeatherPlugin(Vue: typeof _Vue, opts?: {}): void {
+export default function VueFeatherPlugin(Vue: typeof _Vue): void {
   // Set up socket.io
   const socket = io();
   // Initialize a Feathers app

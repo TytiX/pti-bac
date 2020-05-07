@@ -42,7 +42,7 @@ export class GameService {
         game.connected ++;
         if (game.connected === game.users.length) {
           console.log('start a game');
-          // this.app.service('games').update(game.id, {state: 'started'});
+          this.app.service('games').update(game.id, {step: 'leaderboard'});
 
           timer(LEADERBOARD_TIMEOUT).subscribe( () => {
             this.startGame(game);
@@ -50,10 +50,10 @@ export class GameService {
         }
       });
       socket.on('roundFinished', (user: User) => {
-        // round finish by user
-        this.app.service('games').update(game.id, {step: 'correction'});
         // stop ticker...
         this.tickers[game.id].unsubscribe();
+        // round finish by user
+        this.app.service('games').update(game.id, { finishedFirst: user, step: 'correction'});
       });
       socket.on('validateCorretion', (user: User) => {
         game.correctionValidated[user.id] = true;

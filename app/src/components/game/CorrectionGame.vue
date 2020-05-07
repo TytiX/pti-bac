@@ -15,11 +15,11 @@
                 v-for="userWord of users"
                 :key="userWord.id">
                 <input type="checkbox" class="custom-control-input"
-                  :id="'validation-'+userWord.id"
+                  :id="`validation-${category.id}-${user.id}-${userWord.id}`"
                   v-model="correction[category.id][user.id].validations[userWord.id]"
                   @click="ckeck(category, user, userWord)"
                   :disabled="userWord.id !== userId">
-                <label class="custom-control-label" :for="'validation-'+userWord.id"></label>
+                <label class="custom-control-label" :for="`validation-${category.id}-${user.id}-${userWord.id}`"></label>
               </div>
 
             </b-col>

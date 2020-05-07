@@ -21,6 +21,8 @@ export class Game {
   currentLetter = '';
   currentRoundTimer = 0;
 
+  finishedFirst?: User;
+
   gameState?: GameState;
 
   correction?: Correction;
@@ -44,7 +46,7 @@ export class Game {
       this.step = game.step;
       switch(this.step) {
         case 'playing':
-          this.drawLetter();
+          // if (this.currentLetter === '') this.drawLetter();
           this.gameState = new GameState(this.categories, this.users);
           this.currentRoundTimer = this.roundTimer;
           break;
@@ -54,13 +56,16 @@ export class Game {
           this.gameState = undefined;
           break;
         case 'leaderboard':
+          this.drawLetter();
           this.calculatePoints();
           this.correction = undefined;
           this.correctionValidated = {};
+          this.finishedFirst = undefined;
           break;
       }
     }
     this.currentRoundTimer = game.currentRoundTimer ? game.currentRoundTimer : this.currentRoundTimer;
+    this.finishedFirst = game.finishedFirst ? game.finishedFirst : this.finishedFirst;
 
     if (game.gameState) {
       // update game state
@@ -71,7 +76,7 @@ export class Game {
       }
     }
     if (game.correction) {
-      console.log('correction: ' + JSON.stringify(game.correction, null, 4));
+      // console.log('correction: ' + JSON.stringify(game.correction, null, 4));
       this.correction = game.correction;
     }
   }
@@ -101,23 +106,25 @@ export class Game {
   }
 
   calculatePoints() {
-    for (const category of this.categories) {
-      // all words of this category
-      const wordsOfCategory: string[] = [];
-      for (const user of this.users) {
-        wordsOfCategory.push(this.correction[category.id][user.id].word);
-      }
+    if (this.correction) {
+      for (const category of this.categories) {
+        // all words of this category
+        const wordsOfCategory: string[] = [];
+        for (const user of this.users) {
+          wordsOfCategory.push(this.correction[category.id][user.id].word);
+        }
 
-      // for each user
-      for (const user of this.users) {
-        const validations = this.correction[category.id][user.id].validations;
+        // for each user
+        for (const user of this.users) {
+          const validations = this.correction[category.id][user.id].validations;
 
-        const oks = Object.values(validations).filter(v => v);
+          const oks = Object.values(validations).filter(v => v);
 
-        if (oks.length > this.users.length / 2) {
-          this.leaderBoard[user.id] += 10;
-          if (this.isWordUnique(this.correction[category.id][user.id].word, wordsOfCategory)) {
+          if (oks.length > this.users.length / 2) {
             this.leaderBoard[user.id] += 10;
+            if (this.isWordUnique(this.correction[category.id][user.id].word, wordsOfCategory)) {
+              this.leaderBoard[user.id] += 10;
+            }
           }
         }
       }
@@ -146,7 +153,8 @@ export class Game {
       categories: this.categories,
       gameState: this. gameState,
       correction: this.correction,
-      leaderBoard: this.leaderBoard
+      leaderBoard: this.leaderBoard,
+      finishedFirst: this.finishedFirst
     };
   }
 }

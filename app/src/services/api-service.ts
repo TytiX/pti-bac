@@ -1,5 +1,4 @@
-import io from 'socket.io-client';
-import { GameState, User } from '@/models';
+import { User } from '@/models';
 
 export default class ApiService {
   app: any;
