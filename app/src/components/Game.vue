@@ -92,11 +92,11 @@ export default class Game extends Vue {
   }
 
   gameStateUpdate(game: GameState) {
-    // console.log(game);
-    this.gameState = game;
-    this.leaderBoard = game.leaderBoard || {};
-    console.log('----- update input: ', game.correction);
-    this.correction = game.correction || {};
+    if (game && this.$route.params.gameId === game.id) {
+      this.gameState = game;
+      this.leaderBoard = game.leaderBoard || {};
+      this.correction = game.correction || {};
+    }
   }
 
   /**
@@ -125,7 +125,6 @@ export default class Game extends Vue {
    * Correction callback methods
    */
   wordCheck(correction: Correction) {
-    console.log('----- update output: ', correction);
     // send check
     this.$feather.service('games').update(this.gameState.id, {
       correction: correction

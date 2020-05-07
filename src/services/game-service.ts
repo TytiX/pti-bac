@@ -106,6 +106,7 @@ export class GameService {
   async delete(id: Id) {
     const game = this.db.getGame(id as string);
     delete (this.app as unknown as any).io.nsps[`/game-${game.name}-${game.id}`];
+    this.tickers[game.id].unsubscribe();
     this.db.deleteGame(id as string);
   }
 
