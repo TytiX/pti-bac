@@ -1,0 +1,72 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+  heroku: circleci/heroku@1.0.1
+
+jobs:
+  build:
+    executor:
+      name: node/default
+    working_directory: ~/app
+    steps:
+      - checkout
+      # setup heroku
+      - setup_remote_docker
+      - run:
+          name: "check version"
+          command: |
+            npm --version
+            node --version
+      - run:
+          name: "Install Heroku CLI, if necessary"
+          command: |
+            sudo npm install -g heroku
+      - run:
+          name: Update Heroku cli
+          command: |
+            heroku update
+      - run:
+          name: Login into Heroku Docker Repository
+          command: |
+            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Build and Push Heroku Docker Container
+          command: |
+            heroku container:push web -a $HEROKU_APP_NAME
+      # Artefact store -- STORED IN DOCKER
+
+  deploy:
+    executor:
+      name: node/default
+    steps:
+      - setup_remote_docker
+      - run:
+          name: "check version"
+          command: |
+            npm --version
+            node --version
+      - run:
+          name: "Install Heroku CLI, if necessary"
+          command: |
+            sudo npm install -g heroku
+      - run:
+          name: Update Heroku cli
+          command: |
+            heroku update
+      - run:
+          name: Login into Heroku Docker Repository
+          command: |
+            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Deploy Heroku Docker Container
+          command: |
+            heroku container:release web -a $HEROKU_APP_NAME
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
