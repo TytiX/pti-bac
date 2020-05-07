@@ -7,7 +7,7 @@ import { LocalSocket } from '../models/LocalSocket';
 import { User } from '../models/user';
 import { Lobby } from '../models/lobby';
 
-const LEADERBOARD_TIMEOUT = 5000;
+const LEADERBOARD_TIMEOUT = 10 * 1000; // 10s
 
 export class GameService {
   db: Datas;
