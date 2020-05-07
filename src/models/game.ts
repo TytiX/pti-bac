@@ -89,18 +89,20 @@ export class Game {
 
   setupCorrection() {
     this.correction = new Correction(this.categories);
-    for(const category of this.categories) {
-      for (const user of this.users) {
-        // set validation
-        const validations = {};
-        for(const u of this.users) {
-          validations[u.id] = false;
+    if (this.gameState) {
+      for(const category of this.categories) {
+        for (const user of this.users) {
+          // set validation
+          const validations = {};
+          for(const u of this.users) {
+            validations[u.id] = false;
+          }
+          // set correction
+          this.correction[category.id][user.id] = {
+            word: this.gameState[category.id][user.id],
+            validations
+          };
         }
-        // set correction
-        this.correction[category.id][user.id] = {
-          word: this.gameState[category.id][user.id],
-          validations
-        };
       }
     }
   }

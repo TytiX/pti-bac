@@ -4,7 +4,7 @@
     <div class="container mt-3">
 
       <div v-if="gameState.step === 'playing'">
-        <div>{{gameState.currentLetter}}</div>
+        <h4>La lettre est : <b>{{gameState.currentLetter}}</b></h4>
         <div>{{gameState.currentRoundTimer | timer}}</div>
         <FieldsGame
           :categories="gameState.categories"
@@ -14,7 +14,9 @@
       </div>
 
       <div v-else-if="gameState.step === 'correction'">
-        <div>{{gameState.currentLetter}}</div>
+        <h4>La lettre etait : <b>{{gameState.currentLetter}}</b></h4>
+
+        <div v-if="gameState.finishedFirst">{{ gameState.finishedFirst.name }} a terminé en premier</div>
         <CorrectionGame
           :users="gameState.users"
           :categories="gameState.categories"
@@ -25,7 +27,7 @@
       </div>
 
       <div v-else>
-        <div>{{gameState.currentLetter}}</div>
+        <h4>la prochaine lettre est : <b>{{gameState.currentLetter}}</b></h4>
         <LeaderBoardGame
           :users="gameState.users"
           :board="leaderBoard">
