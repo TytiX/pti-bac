@@ -6,7 +6,6 @@
   "scripts": {
     "debug": "ts-node-dev --inspect --respawn --transpileOnly src/app.ts",
     "start": "ts-node src/app.ts",
-    "install": "cd app && yarn install",
     "build": "cd app && yarn build"
   },
   "author": "",

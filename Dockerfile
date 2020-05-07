@@ -6,6 +6,7 @@ RUN apk add g++ make python
 WORKDIR /app/
 COPY . .
 RUN yarn install
+RUN cd app && yarn install
 RUN yarn build
 
 # Run image
