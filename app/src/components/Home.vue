@@ -9,7 +9,12 @@
           v-model="newGameName"
           placeholder="Nom de la partie" trim></b-form-input>
         <b-input-group-append>
-          <b-button @click="newGame" variant="success"><b-icon icon="plus"></b-icon></b-button>
+          <b-button
+            v-b-tooltip.hover title="Créer la partie"
+            @click="newGame"
+            variant="success">
+            <b-icon icon="plus"></b-icon>
+          </b-button>
         </b-input-group-append>
       </b-input-group>
 
@@ -69,7 +74,6 @@ export default class Home extends Vue {
     }
   }
   removeList(lobby: Lobby) {
-    console.log('remove lobby: ', lobby);
     const index = this.lobbies.findIndex( l => { l.id === lobby.id });
     if (index < 0) this.lobbies.splice(index, 1);
   }
