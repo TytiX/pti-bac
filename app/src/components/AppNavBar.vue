@@ -6,16 +6,21 @@
     <b-navbar-brand>{{title}}</b-navbar-brand>
     
     <b-navbar-nav class="ml-auto">
-      <b-button v-if="isHome" v-b-modal.user-modal><b-icon icon="person"></b-icon></b-button>
+      <b-button
+        v-if="isHome"
+        v-b-tooltip.hover title="Changer son nom"
+        v-b-modal.user-modal>
+        <b-icon icon="person"></b-icon>
+      </b-button>
     </b-navbar-nav>
 
     <b-modal id="user-modal"
-      title="Change user name"
+      title="Changer de nom"
       @ok="handleOk">
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group
           :state="nameState"
-          label="Name"
+          label="Nom"
           label-for="name-input"
           invalid-feedback="Name is required">
           <b-form-input
