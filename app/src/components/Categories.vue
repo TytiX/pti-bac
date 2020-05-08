@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- <div>{{numberToDraw}}</div> -->
+    <b-input-group prepend="5" append="20" class="mt-3">
+      <b-form-input v-b-tooltip :title="numberToDraw" v-model="numberToDraw" type="range" min="5" max="20"></b-form-input>
+    </b-input-group>
     <b-button-group>
       <b-button @click="random()" class="mt-3 mb-3">Random All</b-button>
       <b-button @click="random('classic')" class="mt-3 mb-3">Random Classic</b-button>
@@ -15,13 +19,17 @@
     </b-list-group>
 
     <div class="button-footer">
-      <b-button variant="success"
+      <b-button
+        v-b-tooltip.hover title="Ajoute les categories aux existantes"
+        variant="success"
         @click="$emit('add-categories', {categories: randomCategories, action: 'Add'})">
-        Add
+        Ajouter
       </b-button>
-      <b-button variant="warning"
+      <b-button
+        v-b-tooltip.hover title="Remplace les categories par le tirrage"
+        variant="warning"
         @click="$emit('add-categories', {categories: randomCategories, action: 'Set'})">
-        Set
+        Remplacer
       </b-button>
     </div>
 
@@ -35,23 +43,20 @@ import { Category } from '@/models';
 
 @Component
 export default class Categories extends Vue {
-  // categories: Category[] = [];
   randomCategories: Category[] = [];
-  mounted() {
-    // this.$feather.service('categories').find().then( (categories: Category[]) => {
-    //   this.categories = categories;
-    // });
-  }
+  numberToDraw = 5;
+
   random(...types: string[]) {
     this.$feather.service('categories').find({
       query: {
-        random: 5,
+        random: this.numberToDraw,
         types
       }
     }).then( (categories: Category[]) => {
       this.randomCategories = categories;
     });
   }
+
 }
 </script>
 

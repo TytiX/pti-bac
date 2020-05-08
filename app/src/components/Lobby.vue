@@ -5,14 +5,15 @@
       <b-row>
         <b-col>
           <h4 class="mt-3">Temps par manche</h4>
-          <b-input-group class="mt-3">
+          <b-form-select v-model="timer2time" :options="timeOptions"></b-form-select>
+          <!-- <b-input-group class="mt-3">
             <b-form-timepicker
               v-model="timer2time"
               size="sm"
               hourCycle='h23'
               show-seconds>
             </b-form-timepicker>
-          </b-input-group>
+          </b-input-group> -->
         </b-col>
       </b-row>
 
@@ -21,14 +22,22 @@
           <h4 class="mt-3">Categories</h4>
           <b-input-group size="md" class="mt-3 mb-3">
             <b-input-group-prepend>
-              <b-button variant="warning" v-b-modal.modal-categories><b-icon icon="collection"></b-icon></b-button>
+              <b-button
+                v-b-tooltip.hover title="Ajouter des catégories prédéfinis"
+                variant="warning"
+                v-b-modal.modal-categories>
+                <b-icon icon="collection"></b-icon>
+              </b-button>
             </b-input-group-prepend>
             <b-form-input
               placeholder="Categorie"
               @keyup.enter="updateCategories('add')"
-              v-model="newCategorie"></b-form-input>
+              v-model="newCategorie" trim></b-form-input>
             <b-input-group-append>
-              <b-button @click="updateCategories('add')" variant="success"><b-icon icon="plus"></b-icon></b-button>
+              <b-button
+                v-b-tooltip.hover title="Ajouter la categorie"
+                @click="updateCategories('add')"
+                variant="success"><b-icon icon="plus"></b-icon></b-button>
             </b-input-group-append>
           </b-input-group>
 
@@ -42,7 +51,7 @@
         </b-col>
 
         <b-col md="6">
-          <h4 class="mt-3">Users</h4>
+          <h4 class="mt-3">Joueurs <b-button v-b-tooltip.hover title="Inviter des gens" @click="share"><b-icon icon="person-plus"></b-icon></b-button></h4>
           <b-list-group>
             <b-list-group-item v-for="user of lobby.users" :key="user.id">
               {{ user.name }}
@@ -53,7 +62,7 @@
 
       <b-row>
         <b-col>
-          <b-button class="mt-3" @click="startModal">Start game</b-button>
+          <b-button class="mt-3" v-b-tooltip.hover title="Commencer la partie" @click="startModal">Début de partie</b-button>
         </b-col>
       </b-row>
 
@@ -79,6 +88,14 @@
       Commencer la partie ?
     </b-modal>
 
+    <b-modal id="modal-social-share"
+      title="Partager le lien"
+       size="lg"
+      centered
+      ok-only>
+      <SocialSharing></SocialSharing>
+    </b-modal>
+
   </div>
 </template>
 
@@ -88,6 +105,7 @@ import io from 'socket.io-client';
 
 import AppNavBar from '@/components/AppNavBar.vue';
 import Categories from '@/components/Categories.vue';
+import SocialSharing from '@/components/SocialSharing.vue';
 import { Lobby, Category, GameState } from '@/models';
 
 @Component({
@@ -98,6 +116,7 @@ import { Lobby, Category, GameState } from '@/models';
   },
   components: {
     AppNavBar,
+    SocialSharing,
     Categories
   }
 })
@@ -110,6 +129,14 @@ export default class LobbyComp extends Vue{
     users: [],
     timer: 0
   };
+  timeOptions = [
+    { value: '00:00:30', text: '30 sec' },
+    { value: '00:01:00', text: '1 min' },
+    { value: '00:02:00', text: '2 min' },
+    { value: '00:03:00', text: '3 min' },
+    { value: '00:05:00', text: '5 min' },
+    { value: '00:10:00', text: '10 min' }
+  ];
   client!: SocketIOClient.Socket;
 
   mounted() {
@@ -170,7 +197,7 @@ export default class LobbyComp extends Vue{
   }
 
   updateCategories(action: 'add' | 'remove', item?: Category) {
-    if (action === 'add') {
+    if ( action === 'add' && (item || this.newCategorie.length > 0) ) {
       this.lobby.categories.push({ id: this.lobby.categories.length, name: item ? item.name : this.newCategorie });
     } else if (action === 'remove' && item) {
       const index = this.lobby.categories.indexOf(item);
@@ -200,6 +227,19 @@ export default class LobbyComp extends Vue{
 
   beforeDestroy() {
     this.client.disconnect();
+  }
+
+  share() {
+    if ((navigator as any).share) {
+      (navigator as any).share({
+        title: 'Inviation Pti bac',
+        text: 'Je t\'invite à jouer au petit bac',
+        url: this.$route.fullPath
+      });
+    } else {
+      // share modal
+      this.$bvModal.show('modal-social-share');
+    }
   }
 }
 </script>
