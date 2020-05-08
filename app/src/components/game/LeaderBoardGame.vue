@@ -32,10 +32,10 @@ export default class LeaderBoardGame extends Vue {
   board!: LeaderBoard;
 
   countdownSubscription!: Subscription;
-  countdown = 10 * 1000;
+  countdown = 5 * 1000;
 
   mounted() {
-    this.countdown = 10 * 1000;
+    this.countdown = 5 * 1000;
     this.countdownSubscription = interval(1000).subscribe( () => {
       console.log(this.countdown);
       this.countdown -= 1000;
