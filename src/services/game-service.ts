@@ -20,7 +20,9 @@ export class GameService {
   }
 
   async get(id: Id, params: Params) {
-    return this.db.getGame(id as string).toEntity();
+    const game = this.db.getGame(id as string)
+    if (game) return game.toEntity();
+    return game;
   }
 
   async create(data: Partial<Lobby>, params?: Params) {
@@ -99,12 +101,14 @@ export class GameService {
 
   async update(id: NullableId, data: Partial<Game>, params?: Params) {
     const game = this.db.getGame(id as string);
+    if (!game) return;
     game.update(data);
     return game.toEntity();
   }
 
   async delete(id: Id) {
     const game = this.db.getGame(id as string);
+    if (!game) return;
     delete (this.app as unknown as any).io.nsps[`/game-${game.id}`];
     this.tickers[game.id].unsubscribe();
     this.db.deleteGame(id as string);

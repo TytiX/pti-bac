@@ -4,11 +4,11 @@ import { User } from './user';
 interface WordValidation {
   [userid: string]: boolean
 }
-class WordCorrection {
+interface WordCorrection {
   word: string;
   validations: WordValidation;
 }
-class UserWordCorrection {
+interface UserWordCorrection {
   [userid: string]: WordCorrection;
 }
 export class Correction {
@@ -16,12 +16,12 @@ export class Correction {
 
   constructor(categories: Category[]) {
     for (const category of categories) {
-      this[category.id] = new UserWordCorrection();
+      this[category.id] = {};
     }
   }
 }
 
-class UserWord {
+interface UserWord {
   [userid: string]: string;
 }
 export class GameState {
@@ -29,7 +29,7 @@ export class GameState {
 
   constructor(categories: Category[], users: User[]) {
     for (const category of categories) {
-      this[category.id] = new UserWord();
+      this[category.id] = {};
       for (const user of users) {
         this[category.id][user.id] = '';
       }

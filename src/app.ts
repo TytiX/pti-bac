@@ -37,11 +37,11 @@ app.use('/users', new UserService(db));
 app.use(express.errorHandler());
 
 // Add any new real-time connection to the `everybody` channel
-app.on('connection', connection =>
+app.on('connection', (connection: any) =>
   app.channel('everybody').join(connection)
 );
 // Publish all events to the `everybody` channel
-app.publish(data => app.channel('everybody'));
+app.publish((data: any) => app.channel('everybody'));
 
 const port = process.env.PORT || 3030;
 // Start the server

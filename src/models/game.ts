@@ -35,7 +35,7 @@ export class Game {
     this.name = lobby.name || '';
     this.categories = lobby.categories || [];
     this.users = lobby.users || [];
-    this.roundTimer = lobby.timer;
+    this.roundTimer = lobby.timer || 0;
     this.leaderBoard = new LeaderBoard(this.users);
     console.log('---- create game: ', this);
   }
@@ -67,7 +67,7 @@ export class Game {
     this.currentRoundTimer = game.currentRoundTimer ? game.currentRoundTimer : this.currentRoundTimer;
     this.finishedFirst = game.finishedFirst ? game.finishedFirst : this.finishedFirst;
 
-    if (game.gameState) {
+    if (game.gameState && this.gameState) {
       // update game state
       for (const category of this.categories) {
         for(const userid of Object.keys(game.gameState[category.id])) {
@@ -93,7 +93,7 @@ export class Game {
       for(const category of this.categories) {
         for (const user of this.users) {
           // set validation
-          const validations = {};
+          const validations: any = {};
           for(const u of this.users) {
             validations[u.id] = false;
           }
@@ -137,7 +137,8 @@ export class Game {
     return words.filter(w => w.toLowerCase() === word.toLowerCase()).length === 1;
   }
 
-  removeUser(user: User) {
+  removeUser(user?: User) {
+    if (!user) return;
     const index = this.users.findIndex(u => {
       return u.id === user.id;
     });

@@ -14,7 +14,9 @@ export class LobbyService {
   }
 
   async get(id: Id, params?: Params) {
-    return this.db.getLobby(id as string).toEntity();
+    const lobby = this.db.getLobby(id as string);
+    if (lobby) return lobby.toEntity();
+    return lobby;
   }
 
   async find(params?: Params) {
@@ -58,6 +60,7 @@ export class LobbyService {
 
   async delete(id: Id) {
     const lobby = this.db.getLobby(id as string);
+    if (!lobby) return;
     delete (this.app as unknown as any).io.nsps[`/lobby-${lobby.id}`];
     this.db.deleteLobby(id as string);
   }

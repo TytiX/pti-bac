@@ -22,7 +22,8 @@ export class Lobby {
     this.users.push(user);
   }
 
-  removeUser(user: User) {
+  removeUser(user?: User) {
+    if (!user) return;
     const index = this.users.findIndex(u => {
       return u.id === user.id;
     });

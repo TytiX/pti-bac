@@ -11,10 +11,6 @@ export class UserService {
     this.db = db;
   }
 
-  async get(id: Id, params: Params) {
-    return this.db.getGame(id as string).toEntity();
-  }
-
   async create(data: Partial<User>, params?: Params) {
     const user = {
       id: uuidv4(),
@@ -25,6 +21,7 @@ export class UserService {
 
   async update(id: NullableId, data: Partial<User>, params?: Params) {
     const game = this.db.getGame(id as string);
+    if (!game) return;
     game.update(data);
     return game.toEntity();
   }
