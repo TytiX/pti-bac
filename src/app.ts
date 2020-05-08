@@ -7,9 +7,10 @@ import socketio from '@feathersjs/socketio';
 import { MessageService } from './services/message-service';
 import { LobbyService } from './services/lobby-service';
 import { UserService } from './services/user-service';
+import { GameService } from './services/game-service';
+import { CategoryService } from './services/category-service';
 
 import { Datas } from './models/datas';
-import { GameService } from './services/game-service';
 
 // Creates an ExpressJS compatible Feathers application
 const app = express(feathers());
@@ -27,6 +28,7 @@ app.configure(socketio());
 
 app.use('/messages', new MessageService());
 const db = new Datas();
+app.use('/categories', new CategoryService(db));
 app.use('/games', new GameService(db, app));
 app.use('/lobbies', new LobbyService(db, app));
 app.use('/users', new UserService(db));

@@ -2,32 +2,39 @@ import { Category } from './category';
 import { Lobby } from './lobby';
 import { Game } from './game';
 
+import * as categories from '../data/categories.json';
+
 export class Datas {
-  games = [];
-  lobbies = [];
+  games: Game[] = [];
+  lobbies: Lobby[] = [];
 
   constructor() {
   }
 
-  getCategories(lobbyId: string) {
-    const lobby = this.lobbies.find(l => {
-      return l.id === lobbyId;
-    });
-    return lobby ? lobby.categories : [];
-  }
-  addCategorieToLobby(lobbyId: string, data: Pick<Category, 'name'>) {
-    const lobby = this.lobbies.find(l => {
-      return l.id === lobbyId;
-    });
-    const categorie = {
-      id: lobby.categories.length,
-      name: data.name
-    }
-    lobby.categories.push(categorie);
-    return categorie;
+  getCategories(): { name: string; type: string }[] {
+    return categories;
   }
 
-  getLobby(id: string): Lobby {
+  // getCategoriesForLobby(lobbyId: string) {
+  //   const lobby = this.lobbies.find(l => {
+  //     return l.id === lobbyId;
+  //   });
+  //   return lobby ? lobby.categories : [];
+  // }
+
+  // addCategorieToLobby(lobbyId: string, data: Pick<Category, 'name'>) {
+  //   const lobby = this.lobbies.find(l => {
+  //     return l.id === lobbyId;
+  //   });
+  //   const categorie = {
+  //     id: lobby.categories.length,
+  //     name: data.name
+  //   }
+  //   lobby.categories.push(categorie);
+  //   return categorie;
+  // }
+
+  getLobby(id: string): Lobby | undefined {
     return this.lobbies.find(l => {
       return l.id === id;
     });
@@ -48,7 +55,7 @@ export class Datas {
   addGame(game: Game) {
     this.games.push(game);
   }
-  getGame(id: string): Game {
+  getGame(id: string): Game | undefined {
     return this.games.find(g => {
       return g.id === id;
     });

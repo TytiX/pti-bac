@@ -16,10 +16,16 @@
       <b-row>
         <b-col md="6">
           <h4 class="mt-3">Categories</h4>
-          <b-input-group size="sm" class="mt-3 mb-3" prepend="Nouvelle Categorie">
-            <b-form-input @keyup.enter="updateCategories('add')" v-model="newCategorie"></b-form-input>
+          <b-input-group size="md" class="mt-3 mb-3">
+            <b-input-group-prepend>
+              <b-button variant="warning" v-b-modal.modal-categories><b-icon icon="collection"></b-icon></b-button>
+            </b-input-group-prepend>
+            <b-form-input
+              placeholder="Categorie"
+              @keyup.enter="updateCategories('add')"
+              v-model="newCategorie"></b-form-input>
             <b-input-group-append>
-              <b-button @click="updateCategories('add')" size="sm" variant="success"><b-icon icon="plus"></b-icon></b-button>
+              <b-button @click="updateCategories('add')" variant="success"><b-icon icon="plus"></b-icon></b-button>
             </b-input-group-append>
           </b-input-group>
 
@@ -31,6 +37,7 @@
             </b-list-group-item>
           </b-list-group>
         </b-col>
+
         <b-col md="6">
           <h4 class="mt-3">Users</h4>
           <b-list-group>
@@ -48,6 +55,11 @@
       </b-row>
 
     </b-container>
+
+    <b-modal id="modal-categories" size="lg" hide-footer centered title="Categories">
+      <Categories @add-categories="addCategories"></Categories>
+    </b-modal>
+
   </div>
 </template>
 
@@ -56,6 +68,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import io from 'socket.io-client';
 
 import AppNavBar from '@/components/AppNavBar.vue';
+import Categories from '@/components/Categories.vue';
 import { Lobby, Category, GameState } from '@/models';
 
 @Component({
@@ -65,7 +78,8 @@ import { Lobby, Category, GameState } from '@/models';
     }
   },
   components: {
-    AppNavBar
+    AppNavBar,
+    Categories
   }
 })
 export default class LobbyComp extends Vue{
@@ -122,9 +136,23 @@ export default class LobbyComp extends Vue{
     }
   }
 
+  addCategories(event: {categories: Category[]; action: string}) {
+    switch(event.action) {
+      case 'Add':
+        break;
+      case 'Set':
+        this.lobby.categories.length = 0;
+        this.$bvModal.hide('modal-categories');
+        break;
+    }
+    for (const category of event.categories) {
+      this.updateCategories('add', category);
+    }
+  }
+
   updateCategories(action: 'add' | 'remove', item?: Category) {
     if (action === 'add') {
-      this.lobby.categories.push({ id: this.lobby.categories.length, name: this.newCategorie });
+      this.lobby.categories.push({ id: this.lobby.categories.length, name: item ? item.name : this.newCategorie });
     } else if (action === 'remove' && item) {
       const index = this.lobby.categories.indexOf(item);
       this.lobby.categories.splice(index, 1);
