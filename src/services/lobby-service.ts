@@ -58,10 +58,11 @@ export class LobbyService {
     }
   }
 
-  async delete(id: Id) {
+  async remove(id: Id) {
     const lobby = this.db.getLobby(id as string);
     if (!lobby) return;
     delete (this.app as unknown as any).io.nsps[`/lobby-${lobby.id}`];
     this.db.deleteLobby(id as string);
+    return lobby;
   }
 }

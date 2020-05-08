@@ -95,7 +95,7 @@ export class Game {
           // set validation
           const validations: any = {};
           for(const u of this.users) {
-            validations[u.id] = false;
+            if (u.id !== user.id) validations[u.id] = false;
           }
           // set correction
           this.correction[category.id][user.id] = {
@@ -108,6 +108,7 @@ export class Game {
   }
 
   calculatePoints() {
+    console.log(this.correction);
     if (this.correction) {
       for (const category of this.categories) {
         // all words of this category
@@ -120,9 +121,11 @@ export class Game {
         for (const user of this.users) {
           const validations = this.correction[category.id][user.id].validations;
 
+          console.log(validations);
           const oks = Object.values(validations).filter(v => v);
+          console.log(oks);
 
-          if (oks.length > this.users.length / 2) {
+          if (oks.length > (this.users.length-1) / 2) {
             this.leaderBoard[user.id] += 10;
             if (this.isWordUnique(this.correction[category.id][user.id].word, wordsOfCategory)) {
               this.leaderBoard[user.id] += 10;

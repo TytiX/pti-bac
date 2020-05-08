@@ -3,14 +3,17 @@
     <AppNavBar :title="lobby.name | capitalize"></AppNavBar>
     <b-container fluid="md" class="mt-3">
       <b-row>
-        <h4 class="mt-3">Game time</h4>
-        <b-input-group class="mt-3">
-          <b-form-timepicker
-            v-model="timer2time"
-            size="sm"
-            show-seconds>
-          </b-form-timepicker>
-        </b-input-group>
+        <b-col>
+          <h4 class="mt-3">Temps par manche</h4>
+          <b-input-group class="mt-3">
+            <b-form-timepicker
+              v-model="timer2time"
+              size="sm"
+              hourCycle='h23'
+              show-seconds>
+            </b-form-timepicker>
+          </b-input-group>
+        </b-col>
       </b-row>
 
       <b-row>
@@ -50,7 +53,7 @@
 
       <b-row>
         <b-col>
-          <b-button class="mt-3" @click="startGame">Start game</b-button>
+          <b-button class="mt-3" @click="startModal">Start game</b-button>
         </b-col>
       </b-row>
 
@@ -58,6 +61,22 @@
 
     <b-modal id="modal-categories" size="lg" hide-footer centered title="Categories">
       <Categories @add-categories="addCategories"></Categories>
+    </b-modal>
+
+    <b-modal id="modal-lonely"
+      title="Confimation"
+      centered
+      ok-only
+      @ok="startGame">
+      Es-tu sûre de vouloir jouer seul?
+    </b-modal>
+
+    <b-modal id="modal-confirm-start"
+      title="Confimation"
+      centered
+      ok-only
+      @ok="startGame">
+      Commencer la partie ?
     </b-modal>
 
   </div>
@@ -168,8 +187,14 @@ export default class LobbyComp extends Vue{
     }
   }
 
+  startModal() {
+    if (this.lobby.users.length === 1) {
+      this.$bvModal.show('modal-lonely');
+    } else {
+      this.$bvModal.show('modal-confirm-start');
+    }
+  }
   startGame() {
-    // start
     this.$feather.service('games').create(this.lobby);
   }
 

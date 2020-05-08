@@ -9,19 +9,20 @@
           <b-row v-for="user of users" :key="user.id" class="cborder">
             <b-col>{{user.name}}</b-col>
             <b-col>{{ correction[category.id][user.id].word }}</b-col>
-            <b-col>
+            <b-col cols="1">
 
-              <div class="custom-control custom-checkbox custom-control-inline"
-                v-for="userWord of users"
-                :key="userWord.id">
-                <input type="checkbox" class="custom-control-input"
-                  :id="`validation-${category.id}-${user.id}-${userWord.id}`"
-                  v-model="correction[category.id][user.id].validations[userWord.id]"
-                  @click="ckeck(category, user, userWord)"
-                  :disabled="userWord.id !== userId">
-                <label class="custom-control-label" :for="`validation-${category.id}-${user.id}-${userWord.id}`"></label>
-              </div>
-
+              <!-- Checkbox if not my word -->
+              <b-form-checkbox
+                v-if="user.id !== userId"
+                v-model="correction[category.id][user.id].validations[userId]"
+                @change="ckeck(category, user)">
+              </b-form-checkbox>
+            </b-col>
+            <b-col cols="1">
+              <!-- validation icon if majority validate -->
+              <b-icon
+                :icon="wordValidation(correction[category.id][user.id].validations)"
+                class="icon-transition"></b-icon>
             </b-col>
           </b-row>
         </b-col>
@@ -37,7 +38,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 
-import { Category, User, Correction } from '@/models';
+import { Category, User, Correction, WordValidation } from '@/models';
 
 @Component
 export default class CorrectionGame extends Vue {
@@ -54,8 +55,8 @@ export default class CorrectionGame extends Vue {
     return this.$service.getUser().id;
   }
 
-  ckeck(category: Category, user: User, userWord: User) {
-    this.correction[category.id][user.id].validations[userWord.id] = !this.correction[category.id][user.id].validations[userWord.id];
+  ckeck(category: Category, user: User) {
+    this.correction[category.id][user.id].validations[this.userId] = !this.correction[category.id][user.id].validations[this.userId];
 
     this.$emit('check-word', this.correction);
   }
@@ -63,6 +64,11 @@ export default class CorrectionGame extends Vue {
   @Watch('validate')
   confirmCorrection() {
     this.$emit('confirm-correction', this.validate);
+  }
+
+  wordValidation(wordValidation: WordValidation) {
+    const oks = Object.values(wordValidation).filter(v => v);
+    return oks.length > (this.users.length-1) / 2? 'check' : 'x';
   }
 }
 </script>
@@ -82,5 +88,9 @@ export default class CorrectionGame extends Vue {
 }
 .header {
   padding-top: .5rem;
+}
+
+.icon-transition {
+  transition: transform .3s ease-in;
 }
 </style>

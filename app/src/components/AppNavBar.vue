@@ -36,7 +36,7 @@ import { BvModalEvent } from 'bootstrap-vue';
 
 @Component
 export default class AppNavBar extends Vue {
-  @Prop({required: false, default: 'Home'})
+  @Prop({required: false, default: 'Pti Bac'})
   title!: string;
   isHome = true;
 

@@ -73,7 +73,7 @@ export class GameService {
         game.connected--;
         game.removeUser(socket.user);
         if (game.connected === 0) {
-          this.app.service('games').delete(game.id);
+          this.app.service('games').remove(game.id);
         } else {
           this.app.service('games').update(game.id, {users: game.users});
         }
@@ -96,7 +96,7 @@ export class GameService {
   }
 
   deleteLinkedLobby(game: Game) {
-    this.app.service('lobbies').delete(game.id);
+    this.app.service('lobbies').remove(game.id);
   }
 
   async update(id: NullableId, data: Partial<Game>, params?: Params) {
@@ -106,12 +106,13 @@ export class GameService {
     return game.toEntity();
   }
 
-  async delete(id: Id) {
+  async remove(id: Id) {
     const game = this.db.getGame(id as string);
     if (!game) return;
     delete (this.app as unknown as any).io.nsps[`/game-${game.id}`];
     this.tickers[game.id].unsubscribe();
     this.db.deleteGame(id as string);
+    return game;
   }
 
 }

@@ -1,5 +1,5 @@
 
-interface WordValidation {
+export interface WordValidation {
   [userid: string]: boolean
 }
 export interface WordCorrection {
