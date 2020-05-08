@@ -17,6 +17,7 @@ export class Game {
   roundTimer = 0;
 
   step = 'leaderboard';
+  status = 'waiting';
 
   currentLetter = '';
   currentRoundTimer = 0;
@@ -64,6 +65,7 @@ export class Game {
           break;
       }
     }
+    this.status = game.status ? game.status : this.status;
     this.currentRoundTimer = game.currentRoundTimer ? game.currentRoundTimer : this.currentRoundTimer;
     this.finishedFirst = game.finishedFirst ? game.finishedFirst : this.finishedFirst;
 

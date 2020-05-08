@@ -58,5 +58,5 @@ app.service('lobbies').create({
     {id: 2, name: 'Plante'},
     {id: 3, name: 'Pays'}
   ],
-  timer: 6 * 60 * 1000
+  timer: 5 * 60 * 1000
 });
