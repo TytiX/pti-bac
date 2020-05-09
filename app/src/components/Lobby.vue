@@ -234,7 +234,7 @@ export default class LobbyComp extends Vue{
       (navigator as any).share({
         title: 'Inviation Pti bac',
         text: 'Je t\'invite à jouer au petit bac',
-        url: this.$route.fullPath
+        url: window.location.href
       });
     } else {
       // share modal
