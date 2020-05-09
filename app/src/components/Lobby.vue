@@ -202,6 +202,12 @@ export default class LobbyComp extends Vue{
     } else if (action === 'remove' && item) {
       const index = this.lobby.categories.indexOf(item);
       this.lobby.categories.splice(index, 1);
+      this.lobby.categories = this.lobby.categories.map((c: Category, i: number) => {
+        return {
+          id: i,
+          name: c.name
+        }
+      });
     }
     this.$feather.service('lobbies').update(this.lobby.id, this.lobby).then( () => {
       this.newCategorie = '';

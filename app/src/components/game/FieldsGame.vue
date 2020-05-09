@@ -6,6 +6,7 @@
       :label="category.name">
       <b-form-input
         v-model="currentWordState[category.id]"
+        @change="wordChange(category.id)"
         v-on:keyup.enter="$event.target.nextElementSibling.focus()"
         trim></b-form-input>
     </b-form-group>
@@ -16,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
 import { Category, CategoryWord } from '@/models';
 
@@ -33,9 +34,8 @@ export default class FieldsGame extends Vue {
     }
   }
 
-  @Watch('currentWordState', { deep: true })
-  wordChange() {
-    this.$emit('user-change', this.currentWordState);
+  wordChange(categoryId: number) {
+    this.$emit('user-change', this.currentWordState[categoryId], this.categories[categoryId]);
   }
 
   finish() {

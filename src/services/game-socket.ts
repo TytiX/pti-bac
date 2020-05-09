@@ -3,6 +3,7 @@ import { timer, interval, Subscription } from 'rxjs';
 import { Game } from '../models/game';
 import { LocalSocket } from '../models/LocalSocket';
 import { User } from '../models/user';
+import { Category } from '../models/category';
 
 const LEADERBOARD_TIMEOUT = 5 * 1000; // 5s
 
@@ -13,6 +14,7 @@ export class GameSocket {
   game: Game;
 
   ticker?: Subscription;
+  timeOut?: Subscription;
 
   constructor(app: any, game: Game) {
     this.app = app;
@@ -42,6 +44,7 @@ export class GameSocket {
         }
       });
 
+      socket.on('user-input', this.userInput.bind(this));
       socket.on('roundFinished', this.roundFinished.bind(this));
       socket.on('validateCorretion', this.validateCorretion.bind(this));
 
@@ -62,18 +65,29 @@ export class GameSocket {
     this.app.service('games').update(this.game.id, {step: 'playing'});
 
     //output: 0,1,2,3,4,5.... every sec
-    this.ticker = interval(1000).subscribe(val => {
-      this.app.service('games').update(this.game.id, { currentRoundTimer: this.game.currentRoundTimer-1000 })
-    });
-    timer(this.game.roundTimer).subscribe( () => {
+    // this.ticker = interval(1000).subscribe(val => {
+    //   this.app.service('games').update(this.game.id, { currentRoundTimer: this.game.currentRoundTimer-1000 })
+    // });
+    this.timeOut = timer(this.game.roundTimer).subscribe( () => {
       if (this.ticker) this.ticker.unsubscribe();
       this.app.service('games').update(this.game.id, {step: 'correction'});
     });
   }
 
+  userInput(input: {user: User; category: Category; word: string}) {
+    if (this.game.gameState) {
+      this.game.gameState[input.category.id][input.user.id] = input.word;
+    }
+    // not nessecary...
+    // this.game.update({
+    //   gameState: this.game.gameState
+    // });
+  }
+
   roundFinished(user: User) {
     // stop ticker...
     if (this.ticker) this.ticker.unsubscribe();
+    if (this.timeOut) this.timeOut.unsubscribe();
     // round finish by user
     this.app.service('games').update(this.game.id, { finishedFirst: user, step: 'correction'});
   }
@@ -82,6 +96,7 @@ export class GameSocket {
     this.game.correctionValidated[user.id] = true;
     if (Object.keys(this.game.correctionValidated).length === this.game.users.length) {
       this.app.service('games').update(this.game.id, {step: 'leaderboard'});
+      if (this.timeOut) this.timeOut.unsubscribe();
 
       timer(LEADERBOARD_TIMEOUT).subscribe( () => {
         this.startGame();

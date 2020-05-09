@@ -41,13 +41,14 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import io from 'socket.io-client';
+import { interval, Subscription } from 'rxjs';
 
 import AppNavBar from '@/components/AppNavBar.vue';
 import FieldsGame from '@/components/game/FieldsGame.vue';
 import CorrectionGame from '@/components/game/CorrectionGame.vue';
 import LeaderBoardGame from '@/components/game/LeaderBoardGame.vue';
 
-import { GameState, CategoryWord, Correction, GameWordState } from '@/models';
+import { GameState, CategoryWord, Correction, GameWordState, Category } from '@/models';
 
 @Component({
   filters: {
@@ -79,6 +80,7 @@ export default class Game extends Vue {
   correction = {};
   leaderBoard = {};
   client!: SocketIOClient.Socket;
+  ticker?: Subscription;
 
   mounted() {
     this.$feather.service('games').get(this.$route.params.gameId).then( (game: GameState) => {
@@ -98,29 +100,30 @@ export default class Game extends Vue {
       this.gameState = game;
       this.leaderBoard = game.leaderBoard || {};
       this.correction = game.correction || {};
+
+      if (this.gameState.step === 'playing') {
+        this.ticker = interval(1000).subscribe( () => {
+          this.gameState.currentRoundTimer -= 1000;
+        });
+      } else {
+        if (this.ticker) this.ticker.unsubscribe();
+      }
     }
   }
 
   /**
    * Game callbacks
    */
-  userChange(userInputs: CategoryWord) {
-    this.$feather.service('games').update(this.gameState.id, {
-      gameState: this.toGlobalStateGame(userInputs)
+  userChange(userWord: string, category: Category) {
+    this.client.emit('user-input', {
+      user: this.$service.getUser(),
+      category: category,
+      word: userWord
     });
   }
   finish(userInputs: any) {
     // send finish to server
     this.client.emit('roundFinished', this.$service.getUser());
-  }
-  toGlobalStateGame(userInputs: CategoryWord) {
-    const ggs: GameWordState = {}
-    const me = this.$service.getUser();
-    for (const categorie of this.gameState.categories) {
-      ggs[categorie.id] = {};
-      ggs[categorie.id][me.id] = userInputs[categorie.id];
-    }
-    return ggs;
   }
 
   /**
