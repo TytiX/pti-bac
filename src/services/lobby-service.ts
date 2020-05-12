@@ -1,4 +1,7 @@
 import { Params, Application, Id, NullableId } from '@feathersjs/feathers';
+
+import logger from '../logger';
+
 import { Datas } from '../models/datas';
 import { Lobby } from '../models/lobby';
 import { User } from '../models/user';
@@ -33,15 +36,15 @@ export class LobbyService {
   bindLobbySocket(lobby: Lobby) {
     const io = (this.app as unknown as any).io.of(`/lobby-${lobby.id}`);
     io.on('connection', (socket: LocalSocket) => {
-      // console.log('--- user connected');
+      logger.info('--- user connected');
       socket.on('user-connected', (user: User) => {
-        // console.log('--- user added');
+        logger.info('--- user added');
         socket.user = user;
         lobby.addUser(user);
         this.app.service('lobbies').update(lobby.id, {users: lobby.users});
       });
       socket.on('disconnect', () => {
-        // console.log('--- user remove');
+        logger.info('--- user remove');
         lobby.removeUser(socket.user);
         this.app.service('lobbies').update(lobby.id, {users: lobby.users});
       });

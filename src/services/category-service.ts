@@ -13,11 +13,11 @@ export class CategoryService {
     if (param.query && param.query.random) {
       let types = param.query.types || ['classic', 'original', 'hard', 'fun'];
       if (types.length === 0) types = ['classic', 'original', 'hard', 'fun'];
-      // console.log(types);
+
       const filtered = this.db.getCategories().filter((c: { name: string; type: string }) => {
         return types.indexOf(c.type) >= 0;
       });
-      // console.log(filtered);
+
       const list = filtered.map((c: { name: string }, i: number) => {
         return { id: i, name: c.name };
       });

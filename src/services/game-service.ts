@@ -1,5 +1,7 @@
 import { Id, Params, Application, NullableId } from '@feathersjs/feathers';
 
+import logger from '../logger';
+
 import { Datas } from '../models/datas';
 import { Game } from '../models/game';
 import { Lobby } from '../models/lobby';
@@ -25,6 +27,7 @@ export class GameService {
   async create(data: Partial<Lobby>, params?: Params) {
     const game = new Game(data);
 
+    logger.info('create a game: ', game);
     this.gameSocket[game.id] = new GameSocket((this.app as unknown as any), game);
     // this.bindGameSocket(game);
     this.db.addGame(game);
@@ -50,6 +53,7 @@ export class GameService {
     this.gameSocket[game.id].stop();
 
     delete this.gameSocket[game.id];
+    logger.info('delete a game: ', game);
 
     this.db.deleteGame(id as string);
     return game;

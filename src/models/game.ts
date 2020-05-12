@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import logger from '../logger';
+
 import { Category } from './category';
 import { User } from './user';
 import { Lobby } from './lobby';
@@ -38,7 +40,6 @@ export class Game {
     this.users = lobby.users || [];
     this.roundTimer = lobby.timer || 0;
     this.leaderBoard = new LeaderBoard(this.users);
-    console.log('---- create game: ', this);
   }
 
   update(game: Partial<Game>) {
@@ -78,7 +79,7 @@ export class Game {
       }
     }
     if (game.correction) {
-      // console.log('correction: ' + JSON.stringify(game.correction, null, 4));
+      logger.info('correction: ' + JSON.stringify(game.correction, null, 4));
       this.correction = game.correction;
     }
   }
@@ -110,7 +111,7 @@ export class Game {
   }
 
   calculatePoints() {
-    console.log(this.correction);
+    logger.info('correction: ', this.correction);
     if (this.correction) {
       for (const category of this.categories) {
         // all words of this category
@@ -123,9 +124,9 @@ export class Game {
         for (const user of this.users) {
           const validations = this.correction[category.id][user.id].validations;
 
-          console.log(validations);
+          logger.info(validations);
           const oks = Object.values(validations).filter(v => v);
-          console.log(oks);
+          logger.info(oks);
 
           if (oks.length > (this.users.length-1) / 2) {
             this.leaderBoard[user.id] += 10;

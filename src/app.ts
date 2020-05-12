@@ -4,6 +4,8 @@ import express from '@feathersjs/express';
 import * as expressjs from 'express';
 import socketio from '@feathersjs/socketio';
 
+import logger from './logger';
+
 import { MessageService } from './services/message-service';
 import { LobbyService } from './services/lobby-service';
 import { UserService } from './services/user-service';
@@ -45,9 +47,9 @@ app.publish((data: any) => app.channel('everybody'));
 
 const port = process.env.PORT || 3030;
 // Start the server
-app.listen(port).on('listening', () =>
-  console.log(`Feathers server listening on localhost:${port}`)
-);
+app.listen(port).on('listening', () => {
+  logger.info(`Feathers server listening on localhost:${port}`);
+});
 
 // create lobby "default"
 app.service('lobbies').create({

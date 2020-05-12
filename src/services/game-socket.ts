@@ -1,4 +1,6 @@
-import { timer, interval, Subscription } from 'rxjs';
+import { timer, Subscription } from 'rxjs';
+
+import logger from '../logger';
 
 import { Game } from '../models/game';
 import { LocalSocket } from '../models/LocalSocket';
@@ -25,14 +27,14 @@ export class GameSocket {
 
   bindGameSocket() {
     this.io.on('connection', (socket: LocalSocket) => {
-      console.log('--- user connected');
+      logger.info('--- user connected');
 
       socket.on('user-connected', (user: User) => {
-        console.log('--- user added');
+        logger.info('--- user added');
         socket.user = user;
         this.game.connected ++;
         if (this.game.connected === this.game.users.length && this.game.status === 'waiting') {
-          console.log('start a game', this.game);
+          logger.info('start a game', this.game);
 
           this.app.service('games').update(this.game.id, {
             step: 'leaderboard',
@@ -48,8 +50,8 @@ export class GameSocket {
       socket.on('roundFinished', this.roundFinished.bind(this));
       socket.on('validateCorretion', this.validateCorretion.bind(this));
 
-      socket.on('disconnect', () => {
-        console.log('--- user remove');
+      socket.on('disconnect', (reason: string) => {
+        logger.info('--- user remove');
         this.game.connected--;
         this.game.removeUser(socket.user);
         if (this.game.connected === 0) {

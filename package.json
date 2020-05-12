@@ -11,11 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@airbrake/node": "^1.1.2",
     "@feathersjs/express": "^4.5.4",
     "@feathersjs/feathers": "^4.5.3",
     "@feathersjs/socketio": "^4.5.4",
     "rxjs": "^6.5.5",
-    "uuid": "^8.0.0"
+    "uuid": "^8.0.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^13.13.4",
