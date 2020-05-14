@@ -4,40 +4,34 @@
     <b-container fluid="md" class="mt-3">
       <b-row>
         <b-col>
-          <h4 class="mt-3">Temps par manche</h4>
+          <h4 class="mt-3">{{ $t('time-per-round') }}</h4>
           <b-form-select v-model="timer2time" :options="timeOptions"></b-form-select>
-          <!-- <b-input-group class="mt-3">
-            <b-form-timepicker
-              v-model="timer2time"
-              size="sm"
-              hourCycle='h23'
-              show-seconds>
-            </b-form-timepicker>
-          </b-input-group> -->
         </b-col>
       </b-row>
 
       <b-row>
         <b-col md="6">
-          <h4 class="mt-3">Categories</h4>
+          <h4 class="mt-3">{{ $t('categories') }}</h4>
           <b-input-group size="md" class="mt-3 mb-3">
             <b-input-group-prepend>
               <b-button
-                v-b-tooltip.hover title="Ajouter des catégories prédéfinis"
+                v-b-tooltip.hover :title="$t('predefined-categories')"
                 variant="warning"
                 v-b-modal.modal-categories>
                 <b-icon icon="collection"></b-icon>
               </b-button>
             </b-input-group-prepend>
             <b-form-input
-              placeholder="Categorie"
+              :placeholder="$t('categorie')"
               @keyup.enter="updateCategories('add')"
               v-model="newCategorie" trim></b-form-input>
             <b-input-group-append>
               <b-button
-                v-b-tooltip.hover title="Ajouter la categorie"
+                v-b-tooltip.hover :title="$t('add-categorie')"
                 @click="updateCategories('add')"
-                variant="success"><b-icon icon="plus"></b-icon></b-button>
+                variant="success">
+                <b-icon icon="plus"></b-icon>
+              </b-button>
             </b-input-group-append>
           </b-input-group>
 
@@ -45,13 +39,20 @@
             <b-list-group-item v-for="category of lobby.categories" :key="category.id"
               class="d-flex justify-content-between align-items-center">
               {{category.name}}
-              <b-button @click="updateCategories('remove', category)" variant="danger"><b-icon icon="trash"></b-icon></b-button>
+              <b-button @click="updateCategories('remove', category)" variant="danger">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
             </b-list-group-item>
           </b-list-group>
         </b-col>
 
         <b-col md="6">
-          <h4 class="mt-3">Joueurs <b-button v-b-tooltip.hover title="Inviter des gens" @click="share"><b-icon icon="person-plus"></b-icon></b-button></h4>
+          <h4 class="mt-3">
+            {{ $t('players') }}
+            <b-button v-b-tooltip.hover :title="$t('invite-pepole')" @click="share">
+              <b-icon icon="person-plus"></b-icon>
+            </b-button>
+          </h4>
           <b-list-group>
             <b-list-group-item v-for="user of lobby.users" :key="user.id">
               {{ user.name }}
@@ -62,34 +63,36 @@
 
       <b-row>
         <b-col>
-          <b-button class="mt-3" v-b-tooltip.hover title="Commencer la partie" @click="startModal">Début de partie</b-button>
+          <b-button class="mt-3"
+            v-b-tooltip.hover :title="$t('start-game')"
+            @click="startModal">{{ $t('start-game') }}</b-button>
         </b-col>
       </b-row>
 
     </b-container>
 
-    <b-modal id="modal-categories" size="lg" hide-footer centered title="Categories">
+    <b-modal id="modal-categories" size="lg" hide-footer centered :title="$t('categories')">
       <Categories @add-categories="addCategories"></Categories>
     </b-modal>
 
     <b-modal id="modal-lonely"
-      title="Confimation"
+      :title="$t('confirm')"
       centered
       ok-only
       @ok="startGame">
-      Es-tu sûre de vouloir jouer seul?
+      {{ $t('are-u-sure') }}
     </b-modal>
 
     <b-modal id="modal-confirm-start"
-      title="Confimation"
+      :title="$t('confirm')"
       centered
       ok-only
       @ok="startGame">
-      Commencer la partie ?
+      {{ $t('should-start') }}
     </b-modal>
 
     <b-modal id="modal-social-share"
-      title="Partager le lien"
+      :title="$t('share-link')"
        size="lg"
       centered
       ok-only>
@@ -236,10 +239,12 @@ export default class LobbyComp extends Vue{
   }
 
   share() {
+    // eslint-disable-next-line
     if ((navigator as any).share) {
+      // eslint-disable-next-line
       (navigator as any).share({
-        title: 'Inviation Pti bac',
-        text: 'Je t\'invite à jouer au petit bac',
+        title: this.$t('invite-title'),
+        text: this.$t('invite-text'),
         url: window.location.href
       });
     } else {

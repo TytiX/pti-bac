@@ -27,5 +27,19 @@
   "add-to-existing": "Ajoute les categories aux existantes",
   "replace-existing": "Remplace les categories par le tirrage",
   "add-button": "Ajouter",
-  "replace-button": "Remplacer"
+  "replace-button": "Remplacer",
+  "invite-title": "Inviation Pti-bac",
+  "invite-text": "Je t'invite à jouer au petit bac",
+  "time-per-round": "Temps par manche",
+  "categories": "Catégories",
+  "categorie": "Catégorie",
+  "predefined-categories": "Ajouter des catégories prédéfinis",
+  "add-categorie": "Ajouter la catégorie",
+  "invite-pepole": "Inviter des gens",
+  "players": "Joueurs",
+  "start-game": "Commencer la partie",
+  "confirm": "Confimation",
+  "are-u-sure": "Es-tu sûre de vouloir jouer seul?",
+  "should-start": "Commencer la partie ?",
+  "share-link": "Partager le lien"
 }
