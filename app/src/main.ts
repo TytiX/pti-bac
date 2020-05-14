@@ -25,6 +25,12 @@ const router = new VueRouter({
 
 import i18n from './i18n'
 
+import VueAnalytics from 'vue-analytics'
+
+Vue.use(VueAnalytics, {
+  id: process.env.GOOGLE_ANALYTICS_ID
+})
+
 new Vue({
   i18n,
   render: h => h(App),

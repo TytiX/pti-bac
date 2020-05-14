@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 
 module.exports = {
   devServer: {
@@ -13,7 +14,13 @@ module.exports = {
       }
     }
   },
-
+  configureWebpack: {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.GOOGLE_ANALYTICS_ID': process.env.GOOGLE_ANALYTICS_ID
+      })
+    ]
+  },
   pluginOptions: {
     i18n: {
       locale: 'fr',
