@@ -25,11 +25,13 @@ const router = new VueRouter({
 
 import i18n from './i18n'
 
-import VueAnalytics from 'vue-analytics'
+import VueGtag from 'vue-gtag'
 
-Vue.use(VueAnalytics, {
-  id: process.env.GOOGLE_ANALYTICS_ID
-})
+Vue.use(VueGtag, {
+  config: { id: process.env.GOOGLE_ANALYTICS_ID },
+  appName: 'Pti Bac',
+  pageTrackerScreenviewEnabled: true
+}, router)
 
 new Vue({
   i18n,

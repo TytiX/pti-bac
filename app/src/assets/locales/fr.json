@@ -1,7 +1,7 @@
 {
   "hello": "Bonjour",
   "create-game-p": "Créer Partie",
-  "game-name": "Nom de la parie",
+  "game-name": "Nom de la partie",
   "create-game": "Créer la partie",
   "waiting-game": "Parties en attente de joueurs",
   "no-game": "Aucune partie en attente de joueurs, créer en une!",
