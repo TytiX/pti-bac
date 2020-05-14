@@ -3,6 +3,7 @@
     <h3>{{ $t('leaderboard') }}</h3>
     <div>
       <b-table striped hover :items="leaderboard" :fields="fields"></b-table>
+      <!-- {{ leaderboard }} -->
     </div>
     <div class="mt-5">{{ $t('start-in') }} {{countdown | timer}}</div>
   </div>
@@ -42,6 +43,10 @@ export default class LeaderBoardGame extends Vue {
     this.countdownSubscription = interval(1000).subscribe( () => {
       this.countdown -= 1000;
     });
+    this.populateLeaderBoard();
+  }
+
+  populateLeaderBoard() {
     for (const user of this.users) {
       this.leaderboard.push({
         userId: user.id,
