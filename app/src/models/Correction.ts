@@ -1,6 +1,6 @@
 
 export interface WordValidation {
-  [userid: string]: boolean
+  [userid: string]: boolean;
 }
 export interface WordCorrection {
   word: string;

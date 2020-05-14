@@ -4,7 +4,7 @@
     <div class="container mt-3">
 
       <div v-if="gameState.step === 'playing'">
-        <h4>La lettre est : <b>{{gameState.currentLetter}}</b></h4>
+        <h4 v-html="$t('current-letter', { letter: gameState.currentLetter})"></h4>
         <div>{{gameState.currentRoundTimer | timer}}</div>
         <FieldsGame
           :categories="gameState.categories"
@@ -14,9 +14,9 @@
       </div>
 
       <div v-else-if="gameState.step === 'correction'">
-        <h4>La lettre etait : <b>{{gameState.currentLetter}}</b></h4>
+        <h4 v-html="$t('past-letter', { letter: gameState.currentLetter})"></h4>
 
-        <div v-if="gameState.finishedFirst">{{ gameState.finishedFirst.name }} a terminé en premier</div>
+        <div v-if="gameState.finishedFirst" v-html="$t('finish-first', { name: gameState.finishedFirst.name })"></div>
         <CorrectionGame
           :users="gameState.users"
           :categories="gameState.categories"
@@ -27,7 +27,7 @@
       </div>
 
       <div v-else>
-        <h4>la prochaine lettre est : <b>{{gameState.currentLetter}}</b></h4>
+        <h4 v-html="$t('next-letter', { letter: gameState.currentLetter})"></h4>
         <LeaderBoardGame
           :users="gameState.users"
           :board="leaderBoard">
@@ -48,7 +48,7 @@ import FieldsGame from '@/components/game/FieldsGame.vue';
 import CorrectionGame from '@/components/game/CorrectionGame.vue';
 import LeaderBoardGame from '@/components/game/LeaderBoardGame.vue';
 
-import { GameState, CategoryWord, Correction, GameWordState, Category } from '@/models';
+import { GameState, Correction, Category } from '@/models';
 
 @Component({
   filters: {
@@ -121,7 +121,7 @@ export default class Game extends Vue {
       word: userWord
     });
   }
-  finish(userInputs: any) {
+  finish(/* userInputs: any */) {
     // send finish to server
     this.client.emit('roundFinished', this.$service.getUser());
   }
@@ -135,7 +135,7 @@ export default class Game extends Vue {
       correction: correction
     });
   }
-  confirmCorrection(correction: any) {
+  confirmCorrection(/* correction: any */) {
     this.client.emit('validateCorretion', this.$service.getUser());
   }
 

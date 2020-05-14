@@ -12,5 +12,14 @@ module.exports = {
         changeOrigin: true
       }
     }
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'fr',
+      fallbackLocale: 'fr',
+      localeDir: 'assets/locales',
+      enableInSFC: false
+    }
   }
 };

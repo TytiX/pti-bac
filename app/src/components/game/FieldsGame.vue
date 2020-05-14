@@ -11,7 +11,7 @@
         trim></b-form-input>
     </b-form-group>
     <div class="button-container">
-      <b-button @click="finish" variant="danger">Finish</b-button>
+      <b-button @click="finish" variant="danger">{{ $t('finish') }}</b-button>
     </div>
   </div>
 </template>

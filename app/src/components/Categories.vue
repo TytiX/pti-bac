@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- <div>{{numberToDraw}}</div> -->
-    <b-input-group prepend="5" append="20" class="mt-3">
-      <b-form-input v-b-tooltip :title="numberToDraw" v-model="numberToDraw" type="range" min="5" max="20"></b-form-input>
+    <b-input-group :append="''+numberToDraw" class="mt-3">
+      <b-form-input v-model="numberToDraw" type="range" min="5" max="20"></b-form-input>
     </b-input-group>
-    <b-button-group>
-      <b-button @click="random()" class="mt-3 mb-3">Random All</b-button>
-      <b-button @click="random('classic')" class="mt-3 mb-3">Random Classic</b-button>
-      <b-button @click="random('original')" class="mt-3 mb-3">Random Original</b-button>
-      <b-button @click="random('hard')" class="mt-3 mb-3">Random Hard</b-button>
-      <b-button @click="random('fun')" class="mt-3 mb-3">Random Fun</b-button>
+    <b-button-group size="sm">
+      <b-button @click="random()" class="mt-3 mb-3">{{ $t('random-all') }}</b-button>
+      <b-button @click="random('classic')" class="mt-3 mb-3">{{ $t('random-classic') }}</b-button>
+      <b-button @click="random('original')" class="mt-3 mb-3">{{ $t('random-original') }}</b-button>
+      <b-button @click="random('hard')" class="mt-3 mb-3">{{ $t('random-hard') }}</b-button>
+      <b-button @click="random('fun')" class="mt-3 mb-3">{{ $t('random-fun') }}</b-button>
     </b-button-group>
 
     <b-list-group>
@@ -20,16 +20,16 @@
 
     <div class="button-footer">
       <b-button
-        v-b-tooltip.hover title="Ajoute les categories aux existantes"
+        v-b-tooltip.hover :title="$t('add-to-existing')"
         variant="success"
         @click="$emit('add-categories', {categories: randomCategories, action: 'Add'})">
-        Ajouter
+        {{ $t('add-button') }}
       </b-button>
       <b-button
-        v-b-tooltip.hover title="Remplace les categories par le tirrage"
+        v-b-tooltip.hover :title="$t('replace-existing')"
         variant="warning"
         @click="$emit('add-categories', {categories: randomCategories, action: 'Set'})">
-        Remplacer
+        {{ $t('replace-button') }}
       </b-button>
     </div>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Correction</h3>
+    <h3>{{ $t('correction') }}</h3>
 
     <b-container class="container-correction">
       <b-row v-for="category of categories" :key="category.id" class="cborder">
@@ -30,7 +30,7 @@
     </b-container>
 
     <b-form-checkbox class="mt-3" v-model="validate" name="check-button" button>
-      <b-icon v-if="validate" icon="check" animation="throb"></b-icon> Validate
+      <b-icon v-if="validate" icon="check" animation="throb"></b-icon> {{ $t('validate') }}
     </b-form-checkbox>
   </div>
 </template>

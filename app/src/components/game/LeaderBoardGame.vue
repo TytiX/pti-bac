@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h3>Leaderboard</h3>
+    <h3>{{ $t('leaderboard') }}</h3>
     <div>
-      <div v-for="user of users" :key="user.id">{{user.name}} - {{board[user.id]}}</div>
+      <b-table striped hover :items="leaderboard" :fields="fields"></b-table>
     </div>
-    <div class="mt-5">Début dans {{countdown | timer}}</div>
+    <div class="mt-5">{{ $t('start-in') }} {{countdown | timer}}</div>
   </div>
 </template>
 
@@ -31,14 +31,26 @@ export default class LeaderBoardGame extends Vue {
   @Prop({required: true})
   board!: LeaderBoard;
 
+  fields = ['name', 'score'];
+  leaderboard: {userId: string; name: string; score: number}[] = [];
+
   countdownSubscription!: Subscription;
   countdown = 5 * 1000;
 
   mounted() {
     this.countdown = 5 * 1000;
     this.countdownSubscription = interval(1000).subscribe( () => {
-      console.log(this.countdown);
       this.countdown -= 1000;
+    });
+    for (const user of this.users) {
+      this.leaderboard.push({
+        userId: user.id,
+        name: user.name,
+        score: this.board[user.id]
+      });
+    }
+    this.leaderboard.sort( (a, b) => {
+      return b.score - a.score;
     });
   }
 

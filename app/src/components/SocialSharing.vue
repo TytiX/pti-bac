@@ -16,7 +16,7 @@
       <b-form-input id="url-to-copy" :value="url"></b-form-input>
       <b-input-group-append>
         <b-button class="copy-btn"
-          v-b-tooltip.click="'Copier!'"
+          v-b-tooltip.click="$t('copy')"
           data-clipboard-target="#url-to-copy"
           @mouseleave="diableTooltip"
           variant="info">
@@ -56,7 +56,7 @@ import {
 })
 export default class SocialSharing extends Vue {
   url = '';
-  title = 'Viens jouez au petit bac';
+  title = this.$t('social-title');
 
   mounted() {
     this.url = window.location.href;
@@ -70,8 +70,8 @@ export default class SocialSharing extends Vue {
       e.clearSelection();
     });
 
-    clip.on('error', function(e) {
-      // console.error('Action:', e.action);
+    clip.on('error', (e) => {
+      console.error('Action:', e.action);
       // console.error('Trigger:', e.trigger);
     });
   }
