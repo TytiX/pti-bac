@@ -1,9 +1,11 @@
 import { User } from '@/models';
 
 export default class ApiService {
+  // eslint-disable-next-line
   app: any;
   gameSocket!: SocketIOClient.Socket;
 
+  // eslint-disable-next-line
   constructor(app: any) {
     this.app = app;
   }

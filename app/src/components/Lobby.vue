@@ -35,15 +35,22 @@
             </b-input-group-append>
           </b-input-group>
 
-          <b-list-group class="text-left">
+          <!-- <b-list-group class="text-left"> -->
+          <draggable
+            :list="lobby.categories"
+            class="list-group"
+            ghost-class="ghost"
+            @start="dragging = true"
+            @end="dragging = false">
             <b-list-group-item v-for="category of lobby.categories" :key="category.id"
-              class="d-flex justify-content-between align-items-center">
+              class="d-flex justify-content-between align-items-center movable">
               {{category.name}}
               <b-button @click="updateCategories('remove', category)" variant="danger">
                 <b-icon icon="trash"></b-icon>
               </b-button>
             </b-list-group-item>
-          </b-list-group>
+          </draggable>
+          <!-- </b-list-group> -->
         </b-col>
 
         <b-col md="6">
@@ -105,6 +112,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import io from 'socket.io-client';
+import draggable from 'vuedraggable'
 
 import AppNavBar from '@/components/AppNavBar.vue';
 import Categories from '@/components/Categories.vue';
@@ -118,12 +126,13 @@ import { Lobby, Category, GameState } from '@/models';
     }
   },
   components: {
+    draggable,
     AppNavBar,
     SocialSharing,
     Categories
   }
 })
-export default class LobbyComp extends Vue{
+export default class LobbyComp extends Vue {
   newCategorie = '';
   lobby: Lobby = {
     id: '',
@@ -258,5 +267,12 @@ export default class LobbyComp extends Vue{
 <style lang="scss" scoped>
 .text-left {
   text-align: left;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.movable {
+    cursor: move;
 }
 </style>
