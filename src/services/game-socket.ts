@@ -32,14 +32,13 @@ export class GameSocket {
       socket.on('user-connected', (user: User) => {
         logger.info('--- user added');
         socket.user = user;
+        this.game.addUser(user);
+        this.io.emit('user-connected', user);
         this.game.connected ++;
-        if (this.game.connected === this.game.users.length && this.game.status === 'waiting') {
+        if ( this.game.connected === this.game.users.length &&
+             this.game.status === 'waiting' ) {
           logger.info('start a game', this.game);
-
-          this.app.service('games').update(this.game.id, {
-            step: 'leaderboard',
-            status: 'playing'
-          });
+          this.initGame();
           timer(LEADERBOARD_TIMEOUT).subscribe( () => {
             this.startGame();
           });
@@ -49,6 +48,8 @@ export class GameSocket {
       socket.on('user-input', this.userInput.bind(this));
       socket.on('roundFinished', this.roundFinished.bind(this));
       socket.on('validateCorretion', this.validateCorretion.bind(this));
+      socket.on('request-categorie-change', this.requestCategorieChange.bind(this));
+      socket.on('user-quit', this.userQuit.bind(this));
 
       socket.on('disconnect', (reason: string) => {
         logger.info('--- user remove');
@@ -60,6 +61,13 @@ export class GameSocket {
           this.app.service('games').update(this.game.id, {users: this.game.users});
         }
       });
+    });
+  }
+
+  initGame() {
+    this.app.service('games').update(this.game.id, {
+      step: 'leaderboard',
+      status: 'playing'
     });
   }
 
@@ -106,6 +114,13 @@ export class GameSocket {
     }
   }
 
+  requestCategorieChange() {
+    //
+  }
+
+  userQuit(user: User) {
+    this.io.emit('user-quit', user);
+  }
 
   stop() {
     delete (this.app as unknown as any).io.nsps[`/game-${this.game.id}`];

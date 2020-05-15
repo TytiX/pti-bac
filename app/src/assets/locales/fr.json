@@ -41,5 +41,10 @@
   "confirm": "Confimation",
   "are-u-sure": "Es-tu sûre de vouloir jouer seul?",
   "should-start": "Commencer la partie ?",
-  "share-link": "Partager le lien"
+  "share-link": "Partager le lien",
+  "change-categories": "Change Catégories",
+  "stop": "Stop",
+  "are-u-sure-quit": "Es-tu sûre de vouloir quitter?",
+  "user-disconnect": "{name} s'est déconnecter!",
+  "user-connect": "{name} s'est connecter!"
 }

@@ -143,6 +143,12 @@ export class Game {
     return words.filter(w => w.toLowerCase() === word.toLowerCase()).length === 1;
   }
 
+  addUser(user?: User) {
+    if (!user) return;
+    this.removeUser(user);
+    this.users.push(user);
+  }
+
   removeUser(user?: User) {
     if (!user) return;
     const index = this.users.findIndex(u => {

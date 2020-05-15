@@ -7,9 +7,21 @@
     </div>
     <div class="mt-5">{{ $t('start-in') }} {{countdown | timer}}</div>
     <div class="mt-5">
-      <b-button @click="sendChangeCategoryRequest" variant="warning" class="mr-3">Change Categories</b-button>
-      <b-button @click="$router.push('/')" variant="danger">Stop</b-button>
+      <!-- <b-button @click="sendChangeCategoryRequest" variant="warning" class="mr-3">
+        {{ $t('change-categories') }}
+      </b-button> -->
+      <b-button v-b-modal.modal-ask-quit variant="danger">
+        {{ $t('stop') }}
+      </b-button>
     </div>
+
+    <b-modal id="modal-ask-quit"
+      :title="$t('confirm')"
+      centered
+      @ok="quitGame">
+      {{ $t('are-u-sure-quit') }}
+    </b-modal>
+
   </div>
 </template>
 
@@ -21,7 +33,7 @@ import { User, LeaderBoard } from '@/models';
 
 const COUNTDOWN = 10 * 1000; // 10s
 
-@Component({})
+@Component
 export default class LeaderBoardGame extends Vue {
   @Prop({required: true})
   users!: User[];
@@ -56,7 +68,11 @@ export default class LeaderBoardGame extends Vue {
   }
 
   sendChangeCategoryRequest() {
-    //
+    this.$emit('send-categories-request');
+  }
+
+  quitGame() {
+    this.$emit('user-quit');
   }
 
   destroyed() {

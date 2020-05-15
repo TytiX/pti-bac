@@ -29,7 +29,9 @@
         <h4 v-html="$t('next-letter', { letter: gameState.currentLetter })"></h4>
         <LeaderBoardGame
           :users="gameState.users"
-          :board="leaderBoard">
+          :board="leaderBoard"
+          @send-categories-request="requestCategoriesChanges"
+          @user-quit="quit">
         </LeaderBoardGame>
       </div>
 
@@ -47,7 +49,7 @@ import FieldsGame from '@/components/game/FieldsGame.vue';
 import CorrectionGame from '@/components/game/CorrectionGame.vue';
 import LeaderBoardGame from '@/components/game/LeaderBoardGame.vue';
 
-import { GameState, Correction, Category } from '@/models';
+import { GameState, Correction, Category, User } from '@/models';
 
 @Component({
   components: {
@@ -83,6 +85,18 @@ export default class Game extends Vue {
 
   bindEvent() {
     this.client.emit('user-connected', this.$service.getUser());
+    this.client.on('user-connected', (user: User) => {
+      this.$bvToast.toast(
+        this.$t('user-connect', { name: user.name }) as string,
+        { variant: "success" }
+      );
+    });
+    this.client.on('user-quit', (user: User) => {
+      this.$bvToast.toast(
+        this.$t('user-disconnect', { name: user.name }) as string,
+        { variant: "danger" }
+      );
+    });
   }
 
   gameStateUpdate(game: GameState) {
@@ -133,7 +147,11 @@ export default class Game extends Vue {
    * LeaderBoard callbacks
    */
   requestCategoriesChanges() {
-    //
+    this.client.emit('request-categorie-change', this.$service.getUser());
+  }
+  quit() {
+    this.client.emit('user-quit', this.$service.getUser());
+    this.$router.push('/');
   }
 
 }
