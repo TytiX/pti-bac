@@ -1,10 +1,10 @@
 <template>
   <div>
     <AppNavBar :title="gameState.name"></AppNavBar>
-    <div class="container mt-3">
+    <div class="container mt-3 mb-3">
 
       <div v-if="gameState.step === 'playing'">
-        <h4 v-html="$t('current-letter', { letter: gameState.currentLetter})"></h4>
+        <h4 v-html="$t('current-letter', { letter: gameState.currentLetter })"></h4>
         <div>{{gameState.currentRoundTimer | timer}}</div>
         <FieldsGame
           :categories="gameState.categories"
@@ -14,8 +14,7 @@
       </div>
 
       <div v-else-if="gameState.step === 'correction'">
-        <h4 v-html="$t('past-letter', { letter: gameState.currentLetter})"></h4>
-
+        <h4 v-html="$t('past-letter', { letter: gameState.currentLetter })"></h4>
         <div v-if="gameState.finishedFirst" v-html="$t('finish-first', { name: gameState.finishedFirst.name })"></div>
         <CorrectionGame
           :users="gameState.users"
@@ -27,7 +26,7 @@
       </div>
 
       <div v-else>
-        <h4 v-html="$t('next-letter', { letter: gameState.currentLetter})"></h4>
+        <h4 v-html="$t('next-letter', { letter: gameState.currentLetter })"></h4>
         <LeaderBoardGame
           :users="gameState.users"
           :board="leaderBoard">
@@ -51,15 +50,6 @@ import LeaderBoardGame from '@/components/game/LeaderBoardGame.vue';
 import { GameState, Correction, Category } from '@/models';
 
 @Component({
-  filters: {
-    timer: (value: number) => {
-      const rem = value / 1000; // secs
-      const min = Math.trunc(rem / 60);
-      const sec = rem % 60;
-      const minBuffer = min > 0 ? `${min}min ` : ''
-      return minBuffer + `${sec}s`
-    }
-  },
   components: {
     AppNavBar,
     FieldsGame,
@@ -137,6 +127,13 @@ export default class Game extends Vue {
   }
   confirmCorrection(/* correction: any */) {
     this.client.emit('validateCorretion', this.$service.getUser());
+  }
+
+  /**
+   * LeaderBoard callbacks
+   */
+  requestCategoriesChanges() {
+    //
   }
 
 }

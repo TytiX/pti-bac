@@ -6,6 +6,10 @@
       <!-- {{ leaderboard }} -->
     </div>
     <div class="mt-5">{{ $t('start-in') }} {{countdown | timer}}</div>
+    <div class="mt-5">
+      <b-button @click="sendChangeCategoryRequest" variant="warning" class="mr-3">Change Categories</b-button>
+      <b-button @click="$router.push('/')" variant="danger">Stop</b-button>
+    </div>
   </div>
 </template>
 
@@ -15,17 +19,9 @@ import { interval, Subscription } from 'rxjs';
 
 import { User, LeaderBoard } from '@/models';
 
-@Component({
-  filters: {
-    timer: (value: number) => {
-      const rem = value / 1000; // secs
-      const min = Math.trunc(rem / 60);
-      const sec = rem % 60;
-      const minBuffer = min > 0 ? `${min}min ` : ''
-      return minBuffer + `${sec}s`
-    }
-  }
-})
+const COUNTDOWN = 10 * 1000; // 10s
+
+@Component({})
 export default class LeaderBoardGame extends Vue {
   @Prop({required: true})
   users!: User[];
@@ -36,10 +32,10 @@ export default class LeaderBoardGame extends Vue {
   leaderboard: {userId: string; name: string; score: number}[] = [];
 
   countdownSubscription!: Subscription;
-  countdown = 5 * 1000;
+  countdown = COUNTDOWN;
 
   mounted() {
-    this.countdown = 5 * 1000;
+    this.countdown = COUNTDOWN;
     this.countdownSubscription = interval(1000).subscribe( () => {
       this.countdown -= 1000;
     });
@@ -57,6 +53,10 @@ export default class LeaderBoardGame extends Vue {
     this.leaderboard.sort( (a, b) => {
       return b.score - a.score;
     });
+  }
+
+  sendChangeCategoryRequest() {
+    //
   }
 
   destroyed() {

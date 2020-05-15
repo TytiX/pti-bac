@@ -15,8 +15,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(VueRouter)
 
+import VueTimerPlugin from './plugins/timer-plugin'
+Vue.use(VueTimerPlugin, {})
+
 import VueFeatherPlugin from './plugins/feather-plugin'
-Vue.use(VueFeatherPlugin, {});
+Vue.use(VueFeatherPlugin, {})
 
 import routes from './routes'
 const router = new VueRouter({

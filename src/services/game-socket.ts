@@ -7,7 +7,7 @@ import { LocalSocket } from '../models/LocalSocket';
 import { User } from '../models/user';
 import { Category } from '../models/category';
 
-const LEADERBOARD_TIMEOUT = 5 * 1000; // 5s
+const LEADERBOARD_TIMEOUT = 10 * 1000; // 10s
 
 export class GameSocket {
   app: any;
