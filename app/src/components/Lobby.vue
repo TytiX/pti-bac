@@ -11,7 +11,9 @@
 
       <b-row>
         <b-col md="6">
+
           <h4 class="mt-3">{{ $t('categories') }}</h4>
+
           <b-input-group size="md" class="mt-3 mb-3">
             <b-input-group-prepend>
               <b-button
@@ -35,22 +37,22 @@
             </b-input-group-append>
           </b-input-group>
 
-          <!-- <b-list-group class="text-left"> -->
           <draggable
-            :list="lobby.categories"
+            v-model="lobby.categories"
             class="list-group"
             ghost-class="ghost"
-            @start="dragging = true"
-            @end="dragging = false">
+            handle=".handle"
+            @change="categoriesMoveUpdate">
             <b-list-group-item v-for="category of lobby.categories" :key="category.id"
-              class="d-flex justify-content-between align-items-center movable">
+              class="d-flex justify-content-between align-items-center">
+              <b-icon class="h4 handle" icon="arrows-move"></b-icon>
               {{category.name}}
               <b-button @click="updateCategories('remove', category)" variant="danger">
                 <b-icon icon="trash"></b-icon>
               </b-button>
             </b-list-group-item>
           </draggable>
-          <!-- </b-list-group> -->
+
         </b-col>
 
         <b-col md="6">
@@ -181,7 +183,7 @@ export default class LobbyComp extends Vue {
 
   set timer2time(value: string) {
     const splits = value.split(':');
-    // convert...      hours                        mins                   secs
+    // convert...      hours                             mins                            secs
     this.lobby.timer = Number(splits[0]) * 3600 * 1000 + Number(splits[1]) * 60 * 1000 + Number(splits[2]) * 1000;
     console.log('-- set timer: ', this.lobby.timer);
     // update lobby
@@ -221,6 +223,12 @@ export default class LobbyComp extends Vue {
         }
       });
     }
+    this.$feather.service('lobbies').update(this.lobby.id, this.lobby).then( () => {
+      this.newCategorie = '';
+    });
+  }
+
+  categoriesMoveUpdate(/* event: any */) {
     this.$feather.service('lobbies').update(this.lobby.id, this.lobby).then( () => {
       this.newCategorie = '';
     });
@@ -273,6 +281,10 @@ export default class LobbyComp extends Vue {
   background: #c8ebfb;
 }
 .movable {
-    cursor: move;
+  cursor: move;
+}
+.handle {
+  cursor: move;
+  cursor: -webkit-grabbing;
 }
 </style>
